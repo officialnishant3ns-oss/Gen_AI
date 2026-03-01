@@ -11,6 +11,12 @@ const register = async (req, res) => {
                 message: 'pls Provide username , password and email'
             })
         }
+        if (password.length < 6) {
+            return res.status(400).json({
+                status: false,
+                message: "Password must be at least 6 characters"
+            })
+        }
         const userExist = await User.findOne({
             $or: [{ email }, { username }]
         })
@@ -26,7 +32,7 @@ const register = async (req, res) => {
             email,
             password: HashedPassword
         })
-        const token =  JWT.sign(
+        const token = JWT.sign(
             {
                 id: user._id,
                 username: user.username
@@ -36,22 +42,89 @@ const register = async (req, res) => {
                 expiresIn: "1d"
             }
         )
-      
-        res.cookie('token',token)
-           return res.status(200).json({
-                status: true,
-                message: 'User Register successfully',
-                token   ,
-                user :{
-                    id:user._id,
-                    username:user.username,
-                    email:user.email
-                }                      
-            })
+
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+        })
+        return res.status(200).json({
+            status: true,
+            message: 'User Register successfully',
+            token,
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
+        })
 
     } catch (error) {
+        console.error("Register Error:", error)
+        return res.status(500).json({
+            status: false,
+            message: "Server error"
+        })
+    }
+}
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body
+        if (!email || !password) {
+            return res.status(400).json({
+                status: false,
+                message: "Email and password are required"
+            })
+        }
+        if (password.length < 6) {
+            return res.status(400).json({
+                status: false,
+                message: "Password must be at least 6 characters"
+            })
+        }
+        const user = await User.findOne({ email })
+        if (!user) {
+            return res.status(400).json({
+                status: false,
+                message: "Invalid email or password"
+            })
+        }
+        const isMatch = await bcrypt.compare(password, user.password)
+        if (!isMatch) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid email or password"
+            })
+        }
+        const token = JWT.sign(
+            { id: user._id },
+            process.env.JWT_SECRETS,
+            { expiresIn: "7d" }
+        )
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
+        })
+        res.status(200).json({
+            success: true,
+            message: "Login successful",
+            token,
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
+        })
 
+    } catch (error) {
+        console.error("Register Error:", error)
+        return res.status(500).json({
+            status: false,
+            message: "Server error"
+        })
     }
 }
 
-export { register }
+
+export { register,login }
