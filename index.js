@@ -1,5 +1,13 @@
-pp.get('/api/v1', (req, res) => {
-  res.send(`
+console.log("Project Started")
+import app from "./src/app.js"
+import dotenv from "dotenv";
+dotenv.config()
+
+app.listen(process.env.PORT || 3000, () => {
+    console.log(`Server is ready at ${process.env.PORT}`);
+})
+app.get('/api/v1', (req, res) => {
+    res.send(`
   <!DOCTYPE html>
   <html lang="en">
   <head>
