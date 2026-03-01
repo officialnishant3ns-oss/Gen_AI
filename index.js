@@ -2,6 +2,9 @@ console.log("Project Started")
 import app from "./src/app.js"
 import dotenv from "dotenv";
 dotenv.config()
+import connectDB from "./src/db/db.js"
+
+connectDB()
 
 app.listen(process.env.PORT || 3000, () => {
     console.log(`Server is ready at ${process.env.PORT}`);
@@ -74,3 +77,5 @@ app.get('/api/v1', (req, res) => {
   </html>
   `)
 })
+
+
