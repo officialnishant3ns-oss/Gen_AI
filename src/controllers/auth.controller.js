@@ -1,6 +1,7 @@
 import User from "../models/user.model.js"
 import bcrypt from "bcryptjs"
 import JWT from 'jsonwebtoken'
+import Blacklist from "../models/blacklist.model.js"
 
 const register = async (req, res) => {
     try {
@@ -126,5 +127,27 @@ const login = async (req, res) => {
     }
 }
 
+async function Logout(req,res) {
+    try {
+        const token = req.cookies.token
+        if(token){
+       await  Blacklist.create({token})
+        }
+        res.clearCookie("token")
+       
+        res.status(200).json({
+            status:true,
+            message:'Logout Successfully'
+        })
 
-export { register,login }
+    } catch (error) {
+        console.error("Register Error:", error)
+        return res.status(500).json({
+            status: false,
+            message: "Server error"
+        })  
+    }
+}
+
+
+export { register,login,Logout }
