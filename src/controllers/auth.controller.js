@@ -119,7 +119,7 @@ const login = async (req, res) => {
         })
 
     } catch (error) {
-        console.error("Register Error:", error)
+        console.error("Login Error:", error)
         return res.status(500).json({
             status: false,
             message: "Server error"
@@ -141,7 +141,7 @@ async function Logout(req,res) {
         })
 
     } catch (error) {
-        console.error("Register Error:", error)
+        console.error("Logout Error:", error)
         return res.status(500).json({
             status: false,
             message: "Server error"
