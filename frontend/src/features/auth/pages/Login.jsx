@@ -1,35 +1,51 @@
 import { useState } from 'react'
+import { Link } from 'react-router'
+import api from '../../../api/api'
+import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const Login = () => {
-    const [fullname, setFullname] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const submitHandler = async (e) => {
-        e.preventDefault()
-        setLoading(true)
+  const submitHandler = async (e) => {
+    e.preventDefault()
+    setLoading(true)
 
-        try {
-            const res = await api.post('/user/login', {
-                email,
-                password
-            })
+    try {
+        const { data } = await api.post('/user/register', {
+            username: fullname,
+            email,
+            password
+        })
 
-            console.log('Register success:', res.data)
+        console.log("Register response:", data)
 
-            localStorage.setItem('token', res.data.token)
-            localStorage.setItem('user', JSON.stringify(res.data.user))
+        if (data.success) {
+            localStorage.setItem("token", data.token)
+            localStorage.setItem("user", JSON.stringify(data.user))
 
             setFullname('')
             setEmail('')
             setPassword('')
-        } catch (err) {
-            console.error('Login failed:', err.response?.data || err.message)
-        } finally {
-            setLoading(false)
+
+            toast.success("Account created successfully 🎉")
+        } else {
+            toast.error(data.message || "Registration failed")
         }
+
+    } catch (err) {
+        console.error("Register failed:", err.response?.data || err.message)
+
+        toast.error(
+            err.response?.data?.message ||
+            "Server error. Please try again."
+        )
+    } finally {
+        setLoading(false)
     }
+}
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black">
@@ -42,7 +58,7 @@ const Login = () => {
                     Login to your account
                 </h2>
                 <input
-                autoComplete="off"
+                    autoComplete="off"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     type="email"
@@ -61,8 +77,17 @@ const Login = () => {
                     disabled={loading}
                     className="bg-indigo-600 hover:bg-indigo-700 active:scale-[0.98] disabled:opacity-50 text-white font-semibold py-3 rounded-xl mt-3 transition-all duration-200 shadow-lg shadow-indigo-900/40"
                 >
-                    {loading ? 'Loging Account...' : 'Login'}
+                    {loading ? 'Logging in......' : 'Login'}
                 </button>
+                <p className="text-center text-gray-400 text-sm">
+                    Don’t have an account?{" "}
+                    <Link
+                        to="/register"
+                        className="text-indigo-400 hover:text-indigo-300 font-medium transition"
+                    >
+                        Sign up
+                    </Link>
+                </p>
 
             </form>
         </div>

@@ -1,14 +1,24 @@
-console.log("Project Started")
 import app from "./src/app.js"
 import dotenv from "dotenv";
-dotenv.config()
+dotenv.config({ path: "./.env" })
+console.log("Project Started")
 import connectDB from "./src/db/db.js"
 
-connectDB()
 
-app.listen(process.env.PORT || 3000, () => {
-    console.log(`Server is ready at ${process.env.PORT}`);
-})
+connectDB()
+.then(() => {
+        app.listen(process.env.PORT || 3000, () => {
+            console.log(`Server is ready at ${process.env.PORT}`);
+        })
+        app.on("error", (error) => {
+            console.error("ERROR:", error)
+            throw error
+        })
+    })
+    .catch((error) => {
+        console.log("Mongo_DB connection failed", error);
+    })
+
 app.get('/api/v1', (req, res) => {
     res.send(`
   <!DOCTYPE html>
