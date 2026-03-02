@@ -149,5 +149,33 @@ async function Logout(req,res) {
     }
 }
 
+async function getUser(req,res) {
+    try {
+        // const id = req.user.id
+        const user = await User.findById( req.user.id)
+        if(!user){
+           return res.status(400).json({
+            status: false,
+            message: "User not Found"
+        })  
 
-export { register,login,Logout }
+    }
+    return res.status(200).json({
+        status:true,
+        message:"User Found Successfully",
+        user: {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
+    })
+    } catch (error) {
+         console.error("Get User Error:", error)
+        return res.status(500).json({
+            status: false,
+            message: "Server error"
+        })
+    }
+}
+
+export { register,login,Logout,getUser }
