@@ -3,16 +3,13 @@ import { Children, createContext, useState } from "react"
 
 export const AuthContext = createContext()
 
-
-
-export const AuthProvider = ({Children})=>{
+export const AuthProvider = ({children})=>{
 const [user,setUser] =useState(null)
 const [loading,setLoading] =useState(false)
 
-
 return (
     <AuthContext.Provider value={{user,setLoading,loading,setUser}}>
-        {Children}
+        {children}
     </AuthContext.Provider>
 )
 }

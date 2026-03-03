@@ -1,52 +1,27 @@
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import api from '../../../api/api'
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import { useAuth } from '../hooks/useAuth'
+import Loader from '../components/Loader'
 
 const Login = () => {
+    const { loading, handleLogin } = useAuth()
+    const navigate = useNavigate()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [loading, setLoading] = useState(false)
 
-  const submitHandler = async (e) => {
-    e.preventDefault()
-    setLoading(true)
+    const submitHandler = async (e) => {
+        e.preventDefault()
+   const success=  await handleLogin({ email, password })
 
-    try {
-        const { data } = await api.post('/user/register', {
-            username: fullname,
-            email,
-            password
-        })
-
-        console.log("Register response:", data)
-
-        if (data.success) {
-            localStorage.setItem("token", data.token)
-            localStorage.setItem("user", JSON.stringify(data.user))
-
-            setFullname('')
-            setEmail('')
-            setPassword('')
-
-            toast.success("Account created successfully 🎉")
-        } else {
-            toast.error(data.message || "Registration failed")
-        }
-
-    } catch (err) {
-        console.error("Register failed:", err.response?.data || err.message)
-
-        toast.error(
-            err.response?.data?.message ||
-            "Server error. Please try again."
-        )
-    } finally {
-        setLoading(false)
     }
-}
-
+    if (loading) {
+        return (
+            <Loader />
+        )
+    }
     return (
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black">
             <form

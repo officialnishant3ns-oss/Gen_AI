@@ -1,39 +1,29 @@
 import { useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import axios from 'axios'
 import api from '../../../api/api'
+import { useAuth } from '../hooks/useAuth'
+import Loader from '../components/Loader'
 
 const Register = () => {
+    const {loading,handleRegister} = useAuth()
+    const navigate = useNavigate()
+
     const [fullname, setFullname] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [loading, setLoading] = useState(false)
 
     const submitHandler = async (e) => {
-        console.log("gyyyyy")
         e.preventDefault()
-        setLoading(true)
-
-        try {
-            const res = await api.post('/user/register', {
-                username: fullname,
-                email,
-                password
-            })
-
-            console.log('Login success:', res.data)
-
-            localStorage.setItem('token', res.data.token)
-            localStorage.setItem('user', JSON.stringify(res.data.user))
-
-            setFullname('')
-            setEmail('')
-            setPassword('')
-        } catch (err) {
-      console.error('Register failed:', err.response?.data?.message || err.message)
-     } finally {
-            setLoading(false)
-        }
+      await  handleRegister({
+            username:fullname,
+            email,
+            password
+        }) 
+        
+    }
+    if(loading){
+        <Loader/>
     }
 
     return (
