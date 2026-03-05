@@ -1,11 +1,8 @@
-import React from 'react'
-import { useAuth } from '../hooks/useAuth'
 
 const Home = () => {
-  const {user} = useAuth()
-  console.log(user)
+ 
   return (
-    <div>
+    <div className="h-screen text-white bg-gray-800">
       Home page 
     </div>
   )

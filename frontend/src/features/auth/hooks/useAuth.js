@@ -42,12 +42,10 @@ export const useAuth = () => {
     const handleLogout = async () => {
         try {
             setLoading(true)
-
             await logout()
-
             setUser(null)
-
             toast.success("Logout successful")
+            navigate('/login')
         } catch (error) {
             toast.error(
                 error?.response?.data?.message || "Logout failed"
