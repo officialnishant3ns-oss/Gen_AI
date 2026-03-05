@@ -1,0 +1,91 @@
+import mongoose from 'mongoose'
+
+const technicalQuestionSchema = new mongoose.Schema({
+    question: {
+        type: String,
+        required: [true, "Technical Question is required"]
+    },
+    intention: {
+        type: String,
+        required: [true, "Intention is required"]
+    },
+    answer: {
+        type: String,
+        required: [true, "Answer Question is required"]
+    }
+}, {
+    _id: false
+})
+const behaviouralQuestionSchema = new mongoose.Schema({
+    question: {
+        type: String,
+        required: [true, "Technical Question is required"]
+    },
+    intention: {
+        type: String,
+        required: [true, "Intention is required"]
+    },
+    answer: {
+        type: String,
+        required: [true, "Answer Question is required"]
+    }
+}, {
+    _id: false
+})
+const SkillGapSchema = new mongoose.Schema({
+    skill: {
+        type: String,
+        required: [true, "Skill is required"]
+    },
+    severity: {
+        type: String,
+        enum: ['low', 'medium', 'high'],
+        required: [true, "severity is required"]
+    }
+}, {
+    _id: false
+})
+const preparationPlanSchema = new mongoose.Schema({
+    day: {
+        type: Number,
+        required: [true, "Day is required"]
+    },
+    focus: {
+        type: String,
+        required: [true, "Focus is required"]
+    },
+    task: [{
+        type: String,
+        required: [true, "Task is required"]
+    }]
+}, {
+    _id: false
+})
+
+
+const interviewSchema = new mongoose.Schema({
+    jobDescription: {
+        type: String,
+        required: [true, 'Job description is required']
+    },
+    resume: {
+        type: String
+    },
+    selfDescription: {
+        type: String
+    },
+    matchScore: {
+        type: Number,
+        min: 0,
+        max: 100
+    },
+    technicalQuestion: [technicalQuestionSchema],
+    behaviouralQuestion: [behaviouralQuestionSchema],
+    skillGaps: [SkillGapSchema],
+    preparationPlan: [preparationPlanSchema]
+},
+{ timestamps: true }
+)
+
+const InterviewReport = mongoose.model('InterviewReport', interviewSchema)
+export default InterviewReport
