@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: "./.env" })
 console.log("Project Started")
 import connectDB from "./src/db/db.js"
-import generateInterviewReport from "./services/ai.services.js"
+import generateInterviewReport from "./src/services/ai.services.js"
 
 connectDB()
 .then(() => {
