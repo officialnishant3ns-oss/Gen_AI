@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: "./.env" })
 console.log("Project Started")
 import connectDB from "./src/db/db.js"
-
+import generateInterviewReport from "./services/ai.services.js"
 
 connectDB()
 .then(() => {
@@ -18,6 +18,35 @@ connectDB()
     .catch((error) => {
         console.log("Mongo_DB connection failed", error);
     })
+
+// generateInterviewReport({
+//     resume: `
+//     Name: Nishant Singh
+//     Skills: JavaScript, React, Node.js, Express, MongoDB
+//     Projects:
+//     - Car Rental App (MERN)
+//     - AI Resume Analyzer
+//     Education: B.Tech Computer Science
+//     `,
+
+//     selfDescription: `
+//     I am a passionate full-stack developer interested in building scalable web applications.
+//     I have experience working with the MERN stack and enjoy solving backend and AI related problems.
+//     I am currently improving my data structures and system design knowledge.
+//     `,
+
+//     jobDescription: `
+//     We are hiring a MERN Stack Developer.
+
+//     Requirements:
+//     - Strong knowledge of React.js
+//     - Experience with Node.js and Express
+//     - MongoDB database design
+//     - REST API development
+//     - Understanding authentication and security
+//     `
+//   })
+
 
 app.get('/api/v1', (req, res) => {
     res.send(`
