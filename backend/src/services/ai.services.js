@@ -12,7 +12,7 @@ const interviewreportSchema = z.object({
     matchScore: z.number().min(1).max(100)
         .describe("Score between 1 and 100 indicating how well the candidate matches the job description"),
 
-    technicalQuestions: z.array(
+    technicalQuestion: z.array(
         z.object({
             question: z.string().describe("Technical interview question can be asked in the interview"),
             intention: z.string().describe("Intention of the interviewer behind asking this question"),
@@ -21,7 +21,7 @@ const interviewreportSchema = z.object({
     ).describe("Technical interview questions along with the interviewer intention and ideal answer strategy"),
 
 
-    behaviouralQuestions: z.array(
+    behaviouralQuestion: z.array(
         z.object({
             question: z.string().describe("Technical interview question can be asked in the interview"),
             intention: z.string().describe("Intention of the interviewer behind asking this question"),
@@ -40,7 +40,7 @@ const interviewreportSchema = z.object({
         z.object({
             day: z.number().describe("Day number in the interview preparation schedule, starting from 1 and increasing sequentially"),
             focus: z.string().describe("Primary topic or skill the candidate should focus on for this day of preparation"),
-            tasks: z.array(
+            task: z.array(
                 z.string().describe("Specific actionable preparation task such as studying a concept, solving problems, practicing coding, or reviewing interview topics")
             )
         })
@@ -49,38 +49,26 @@ const interviewreportSchema = z.object({
 })
 
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
-// const prompt = `
-// You are an expert technical interviewer.
 
-// Generate an interview preparation report.
-
-// Return ONLY JSON matching the schema.
-
-// Candidate Resume:
-// ${resume}
-
-// Self Description:
-// ${selfDescription}
-
-// Job Description:
-// ${jobDescription}
-// `
-
-const prompt = `
+    const prompt = `
 You are an expert technical interviewer.
+
 Analyze the candidate profile and generate an interview preparation report.
-You MUST return JSON that EXACTLY matches this structure:
+
+Return ONLY valid JSON. Do not include explanations, markdown, or text outside JSON.
+
+The JSON MUST exactly match this schema:
 
 {
-  "matchScore": number (1-100),
-  "technicalQuestions": [
+  "matchScore": number,
+  "technicalQuestion": [
     {
       "question": string,
       "intention": string,
       "answer": string
     }
   ],
-  "behaviouralQuestions": [
+  "behaviouralQuestion": [
     {
       "question": string,
       "intention": string,
@@ -97,18 +85,30 @@ You MUST return JSON that EXACTLY matches this structure:
     {
       "day": number,
       "focus": string,
-      "tasks": [string]
+      "task": [string]
     }
   ]
 }
 
-Candidate Resume:${resume}
-Self Description:${selfDescription}
-Job Description:${jobDescription}
+Rules:
+- matchScore must be between 1 and 100
+- Generate 5 technical questions 
+- Generate 3 behavioural questions
+- Generate 3 skill gaps
+- Generate a 5 day preparation plan
+
+Candidate Resume:
+${resume}
+
+Self Description:
+${selfDescription}
+
+Job Description:
+${jobDescription}
 `
     const response = await ai.models.generateContent({
     //    model: "gemini-3-flash-preview",
-    model: "gemini-2.5-flash-lite",
+    model: "gemini-2.5-flash",
         contents: prompt,
         config: {
             responseMimeType: "application/json",
