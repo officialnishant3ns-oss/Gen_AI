@@ -54,7 +54,7 @@ const preparationPlanSchema = new mongoose.Schema({
         type: String,
         required: [true, "Focus is required"]
     },
-    task: [{
+    tasks: [{
         type: String,
         required: [true, "Task is required"]
     }]
