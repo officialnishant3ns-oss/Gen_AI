@@ -28,16 +28,13 @@ const generateInterviewReport_api = async (req, res) => {
             selfDescription,
             jobDescription
         })
-   console.log(rawAiData)
-   
-
         const interviewReport = await InterviewReport.create({
             resume: resumeText.text,
             selfDescription,
             jobDescription,
             ...rawAiData
         })
-   
+
         return res.status(200).json({
             status: true,
             message: 'interview Report generated',
