@@ -28,6 +28,7 @@ export const useAuth = () => {
         try {
             setLoading(true)
             const data = await register({ username, email, password })
+            
             setUser(data.user)
             toast.success(data?.message || "Registration successful")
            navigate('/')

@@ -40,7 +40,7 @@ const Home = () => {
                         </label>
                         <label
                             htmlFor="resume"
-                            className="text-white text-lg h-27  w-120 flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-400 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 cursor-pointer text-gray-900 font-medium text-center"
+                            className="text-white text-lg h-27 flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-400 rounded-xl bg-gradient-to-r from-gray-600 to-gray-800 cursor-pointer text-gray-900 font-medium text-center"
                         >
                             Choose File or Drag & Drop
                         </label>
@@ -52,7 +52,9 @@ const Home = () => {
                             onChange={(e) => setResumeName(e.target.files[0]?.name || "")}
                         />
                         {resumeName && (
-                            <span className="text-sm text-white break-all">{resumeName}</span>
+                            <span className="text-sm text-green-800 w-15 bg-green-100 px-3 py-1 rounded-md break-all inline-block">
+                                Done
+                            </span>
                         )}
                     </div>
 

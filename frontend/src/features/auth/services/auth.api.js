@@ -22,7 +22,7 @@ export async function register({ username, password, email }) {
       email,
       password,
     })
-
+   
     return response.data
   } catch (error) {
     handleError(error)
