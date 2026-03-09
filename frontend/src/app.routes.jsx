@@ -4,13 +4,22 @@ import Register from "./features/auth/pages/Register"
 
 import ProtectedRoutes from "./features/auth/components/ProtectedRoutes"
 import Home from "./features/interview/pages/Home"
+import Response from "./features/interview/pages/Response"
 
 export const router = createBrowserRouter([
+//  {
+//     path: "/",
+//     element: (
+//       <ProtectedRoutes>
+//       <Home/>
+//       </ProtectedRoutes>
+//     )
+//   },
  {
     path: "/",
     element: (
       <ProtectedRoutes>
-      <Home/>
+      <Response/>
       </ProtectedRoutes>
     )
   },
