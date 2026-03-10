@@ -97,25 +97,25 @@ const Response = () => {
 
     const [tab, setTab] = useState("technical")
     return (
-        <div className='grid grid-cols-[290px_1fr_319px] h-screen text-white gap-6 p-6 bg-gradient-to-r from-gray-800 to-gray-900'>
+        <div className='grid grid-cols-[290px_1fr_319px] h-screen text-white gap-1 p-2 bg-gradient-to-r from-gray-800 to-gray-900'>
             {/* left */}
             <div className="bg-gray-900 rounded-xl shadow p-4">
                 <h2 className="text-lg  font-semibold mb-4">Sections</h2>
                 <button
                     onClick={() => setTab('technical')}
-                    className="w-full mb-2 p-2 rounded bg-gray-700 hover:bg-gray-600 cursor-pointer"
+                    className="w-full mb-2 p-2 rounded bg-gray-800 hover:bg-gray-700 cursor-pointer"
                 >
                     Technical Questions
                 </button>
                 <button
                     onClick={() => setTab('behavioural')}
-                    className="w-full mb-2 p-2 rounded bg-gray-700 hover:bg-gray-600 cursor-pointer"
+                    className="w-full mb-2 p-2 rounded bg-gray-800 hover:bg-gray-700 cursor-pointer"
                 >
                     Behavioral Questions
                 </button>
                 <button
                     onClick={() => setTab('skillGap')}
-                    className="w-full mb-2 p-2 rounded bg-gray-700 hover:bg-gray-600 cursor-pointer"
+                    className="w-full mb-2 p-2 rounded bg-gray-800 hover:bg-gray-700 cursor-pointer"
                 >
                     Preparation Plan
                 </button>
@@ -189,7 +189,7 @@ const Response = () => {
                     {data.skillGaps.map((s, index) => (
                         <div
                             key={index}
-                            className="bg-gray-800 p-3 rounded-lg flex justify-between items-center"
+                            className="bg-gray-800 p-3 rounded-lg flex justify-around items-center"
                         >
                             <span className="text-gray-200 font-medium">
                                 {s.skill}
