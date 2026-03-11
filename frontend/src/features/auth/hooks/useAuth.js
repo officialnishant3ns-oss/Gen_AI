@@ -1,8 +1,9 @@
 import { useContext } from "react"
-import { AuthContext } from "../auth.context"
+import { AuthContext } from "../Auth.context"
 import { register, login, logout, getUser } from "../services/auth.api"
 import { toast } from "react-toastify"
-import { useNavigate } from "react-router"
+// import { useNavigate } from "react-router"
+import { Link, useNavigate } from 'react-router-dom'
 
 export const useAuth = () => {
     const context = useContext(AuthContext)
@@ -28,7 +29,7 @@ export const useAuth = () => {
         try {
             setLoading(true)
             const data = await register({ username, email, password })
-            
+            console.log("useAuth",data)
             setUser(data.user)
             toast.success(data?.message || "Registration successful")
            navigate('/')

@@ -15,7 +15,6 @@ const handleError = (error) => {
 }
 
 export async function register({ username, password, email }) {
-  const navigate = useNavigate()
   try {
     const response = await api.post("/user/register", {
       username,
@@ -45,9 +44,6 @@ export async function login({ password, email }) {
 export async function logout() {
   try {
     const response = await api.delete("/user/logout")
-    if(response.sucsess){
-          navigate('/login')
-    }
     return response.data
   } catch (error) {
     handleError(error)

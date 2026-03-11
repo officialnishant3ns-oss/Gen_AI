@@ -22,9 +22,9 @@ const Register = () => {
         }) 
         
     }
-    if(loading){
-        <Loader/>
-    }
+    if (loading) {
+    return <Loader />
+}
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-gray-950 to-black">

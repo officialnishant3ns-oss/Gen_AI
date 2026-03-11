@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom"
 const Home = () => {
-    const [resumeName, setResumeName] = useState("");
+    const [resumeName, setResumeName] = useState("")
+      const navigate =useNavigate()
 
     return (
         <div className="min-h-screen bg-gray-900 p-7 flex flex-col gap-6">
@@ -9,7 +10,7 @@ const Home = () => {
             <div className="text-center mb-2 mt-3">
                 <h1 className="text-4xl sm:text-5xl font-semibold text-white">
                     Create Your Custom{" "}
-                    <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-red-600">
+                    <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-purple-700">
                         Interview Plan
                     </span>
                 </h1>
@@ -70,7 +71,9 @@ const Home = () => {
                         />
                     </div>
 
-                    <button className="mt-4 p-3 rounded-xl font-semibold text-black text-lg bg-gradient-to-r from-blue-400 to-red-500 hover:from-blue-500 hover:to-red-600 transition">
+                    <button
+                    onClick={() => navigate('/response')}
+                     className="mt-4 p-3 rounded-xl font-semibold text-black text-lg bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-red-600 transition">
                         Generate Interview Data
                     </button>
                 </div>

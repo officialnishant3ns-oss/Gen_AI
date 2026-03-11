@@ -7,20 +7,20 @@ import Home from "./features/interview/pages/Home"
 import Response from "./features/interview/pages/Response"
 
 export const router = createBrowserRouter([
-//  {
-//     path: "/",
-//     element: (
-//       <ProtectedRoutes>
-//       <Home/>
-//       </ProtectedRoutes>
-//     )
-//   },
  {
     path: "/",
     element: (
       <ProtectedRoutes>
-      <Response/>
+      <Home/>
       </ProtectedRoutes>
+    )
+  },
+ {
+    path: "/response",
+    element: (
+      <ProtectedRoutes>
+      <Response/>
+      </ProtectedRoutes> 
     )
   },
  {
