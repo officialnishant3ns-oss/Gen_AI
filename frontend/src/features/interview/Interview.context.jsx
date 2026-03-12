@@ -8,7 +8,6 @@ export const InterviewProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const [ai_response , setAi_response] = useState(null)
   
-
     return (
         <InterviewContext.Provider value={{ ai_response, setLoading, loading, setAi_response }}>
             {children}
