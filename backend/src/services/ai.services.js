@@ -131,7 +131,8 @@ const interviewReportSchema = z.object({
             focus: z.string(),
             tasks: z.array(z.string())
         })
-    )
+    ),
+    title:z.string().describe("The title of of the Job for which the interview report is generated")
 
 }).strict()
 
@@ -172,7 +173,10 @@ Return ONLY JSON matching this structure:
      "focus": string,
      "tasks": [string]
    }
- ]
+ ],
+ title:{
+ string
+ }
 }
 
 Resume: ${resume}

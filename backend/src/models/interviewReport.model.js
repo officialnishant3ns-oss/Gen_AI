@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { string } from 'zod'
 
 const technicalQuestionSchema = new mongoose.Schema({
     question: {
@@ -82,7 +83,12 @@ const interviewSchema = new mongoose.Schema({
     technicalQuestion: [technicalQuestionSchema],
     behaviouralQuestion: [behaviouralQuestionSchema],
     skillGaps: [SkillGapSchema],
-    preparationPlan: [preparationPlanSchema]
+    preparationPlan: [preparationPlanSchema],
+
+    title:{
+        type:string,
+        required:true
+    }
 },
 { timestamps: true }
 )

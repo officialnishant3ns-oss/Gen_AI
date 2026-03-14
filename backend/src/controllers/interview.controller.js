@@ -48,23 +48,50 @@ const generateInterviewReport_api = async (req, res) => {
         })
     }
 }
-const getInterviewReport = async(req,res)=>{
+const getInterviewReportById = async (req, res) => {
     try {
-        InterviewId = req.params
-      const Interviewreportdata = await InterviewReport.findById({_id:InterviewId , user:req.user.id})
-      if(!Interviewreportdata){
-         return res.status(400).json({
+        const { InterviewId } = req.params
+        const Interviewreportdata = await InterviewReport.findById({ _id: InterviewId, user: req.user.id })
+
+        if (!Interviewreportdata) {
+            return res.status(400).json({
                 status: false,
                 message: "Unable to extract report"
-            })   
-      }
-       return res.status(200).json({
+            })
+        }
+        return res.status(200).json({
             status: true,
-            message: 'Successfully found Report',
+            message: "Successfully found Report",
             Interviewreportdata
         })
     } catch (error) {
-         console.error("Interview Error:", error)
+        console.error("Interview Error:", error)
+        return res.status(500).json({
+            status: false,
+            message: "Server error while getting interview report"
+        })
+    }
+}
+const getAllInterviewReport = async (req, res) => {
+    try {
+        const Interviewreportdata = await InterviewReport
+            .find({ user: req.user.id })
+
+        if (Interviewreportdata.length === 0) {
+            return res.status(404).json({
+                status: false,
+                message: "No interview reports found"
+            })
+        }
+
+        return res.status(200).json({
+            status: true,
+            message: "Successfully found reports",
+            Interviewreportdata
+        })
+
+    } catch (error) {
+        console.error("Interview Error:", error)
         return res.status(500).json({
             status: false,
             message: "Server error while getting interview report"
@@ -72,4 +99,5 @@ const getInterviewReport = async(req,res)=>{
     }
 }
 
-export { generateInterviewReport_api,getInterviewReport }
+
+export { generateInterviewReport_api, getInterviewReportById, getAllInterviewReport }
