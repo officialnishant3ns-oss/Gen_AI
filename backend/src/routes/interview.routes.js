@@ -1,11 +1,11 @@
 import { Router } from "express"
 import verifyJWT from "../middleware/auth.middleware.js"
 import upload from "../middleware/multer.middleware.js"
-import { generateInterviewReport_api } from "../controllers/interview.controller.js"
+import { generateInterviewReport_api, getInterviewReport } from "../controllers/interview.controller.js"
 
 const interviewRoutes = Router()
 
 interviewRoutes.post('/interview-ai',verifyJWT,upload.single("resume"),generateInterviewReport_api)
-
+interviewRoutes.get('/getinterview-report/:InterviewId',verifyJWT,getInterviewReport)
 
 export default interviewRoutes

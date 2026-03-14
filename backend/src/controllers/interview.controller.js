@@ -48,6 +48,28 @@ const generateInterviewReport_api = async (req, res) => {
         })
     }
 }
+const getInterviewReport = async(req,res)=>{
+    try {
+        InterviewId = req.params
+      const Interviewreportdata = await InterviewReport.findById({_id:InterviewId , user:req.user.id})
+      if(!Interviewreportdata){
+         return res.status(400).json({
+                status: false,
+                message: "Unable to extract report"
+            })   
+      }
+       return res.status(200).json({
+            status: true,
+            message: 'Successfully found Report',
+            Interviewreportdata
+        })
+    } catch (error) {
+         console.error("Interview Error:", error)
+        return res.status(500).json({
+            status: false,
+            message: "Server error while getting interview report"
+        })
+    }
+}
 
-
-export { generateInterviewReport_api }
+export { generateInterviewReport_api,getInterviewReport }
