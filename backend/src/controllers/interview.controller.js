@@ -11,12 +11,18 @@ const generateInterviewReport_api = async (req, res) => {
                 message: "selfDescription and jobDescription are required"
             })
         }
+        if (!req.file) {
+            return res.status(400).json({
+                status: false,
+                message: "Resume PDF is required"
+            })
+        }
 
         const uint8Array = new Uint8Array(req.file.buffer)
         const parser = new PDFParse(uint8Array)
         const resumeText = await parser.getText()
 
-        console.log(resumeText.text)
+        // console.log(resumeText.text)
         if (!resumeText) {
             return res.status(400).json({
                 status: false,
@@ -29,6 +35,7 @@ const generateInterviewReport_api = async (req, res) => {
             jobDescription
         })
         const interviewReport = await InterviewReport.create({
+            user: req.user.id,
             resume: resumeText.text,
             selfDescription,
             jobDescription,
@@ -87,7 +94,8 @@ const getAllInterviewReport = async (req, res) => {
         return res.status(200).json({
             status: true,
             message: "Successfully found reports",
-            Interviewreportdata
+            count:Interviewreportdata.length,
+            Interviewreportdata,
         })
 
     } catch (error) {
@@ -98,6 +106,5 @@ const getAllInterviewReport = async (req, res) => {
         })
     }
 }
-
 
 export { generateInterviewReport_api, getInterviewReportById, getAllInterviewReport }

@@ -85,12 +85,16 @@ const interviewSchema = new mongoose.Schema({
     skillGaps: [SkillGapSchema],
     preparationPlan: [preparationPlanSchema],
 
-    title:{
-        type:string,
-        required:true
+    title: {
+        type: string,
+        required: true
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
     }
 },
-{ timestamps: true }
+    { timestamps: true }
 )
 
 const InterviewReport = mongoose.model('InterviewReport', interviewSchema)
