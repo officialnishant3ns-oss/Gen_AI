@@ -2,7 +2,6 @@ import { useContext } from "react"
 import { AuthContext } from "../Auth.context"
 import { register, login, logout, getUser } from "../services/auth.api"
 import { toast } from "react-toastify"
-// import { useNavigate } from "react-router"
 import { Link, useNavigate } from 'react-router-dom'
 
 export const useAuth = () => {

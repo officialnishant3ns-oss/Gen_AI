@@ -20,7 +20,7 @@ export const getinterviewReport = async ({ resumeFile, selfDescription, jobDescr
     })
     return response.data
 }
-export const getInterviewReportById = async(interviewId)=>{
+export const getInterviewReportById = async(    )=>{
       const response = await api.get(`/getinterview-report/${interviewId}`)
 
       return response.data
