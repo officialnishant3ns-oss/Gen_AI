@@ -4,7 +4,7 @@ import { InterviewContext } from "../Interview.context"
 import { toast } from "react-toastify/unstyled"
 
 const useInterview = () => {
-  const { loading, setLoading, reports, report, setReport } = useContext(InterviewContext)
+  const { loading, setLoading, reports, report, setReport,setReports } = useContext(InterviewContext)
 
   const GenerateReport = async ({ resumeFile, selfDescription, jobDescription }) => {
     try {
@@ -12,6 +12,7 @@ const useInterview = () => {
       const response = await getinterviewReport({ resumeFile, selfDescription, jobDescription })
       setReport(response.data)
 
+      // console.log(response.data)
         return response.data 
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to generate report")
@@ -34,7 +35,7 @@ const useInterview = () => {
     try {
       setLoading(true)
       const response = await getAllInterviewReport()
-      setReport(response.data)
+      setReports(response.data)
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to fetch reports")
     } finally {

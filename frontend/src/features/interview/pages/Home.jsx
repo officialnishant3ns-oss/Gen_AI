@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify";
 import { InterviewContext } from "../Interview.context";
 import Loader from "../../auth/components/Loader";
+import useInterview from "../hooks/useInterview";
 const Home = () => {
-    const { loading, setLoading, GenerateReport } = useContext(InterviewContext)
+    const { loading, setLoading, GenerateReport } = useInterview()
     const navigate = useNavigate()
 
     const [resumeName, setResumeName] = useState("")
@@ -28,15 +29,14 @@ const Home = () => {
         }
         try {
             const response = await GenerateReport({ resumeFile, jobDescription, selfDescription })
-            if (response?.data?._id) {
-                navigate(`/response/${response.data._id}`)
+            // console.log("Generated Report:", response)
+            if (response?._id) {
+                navigate(`/response/${response._id}`)
             }
         } catch (error) {
-            toast.error("Something Wrong at While genrating Response")
+            console.log(error.message)
+            toast.error(error.message)
         }
-    }
-    if (loading) {
-        return <Loader />
     }
     return (
         <div className="min-h-screen bg-gray-900 p-7 flex flex-col gap-6">
@@ -116,7 +116,7 @@ const Home = () => {
                     <button
                         onClick={HandleResponseReport}
                         className="mt-4 p-3 rounded-xl font-semibold text-black text-lg bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-red-600 transition">
-                        Generate Interview Data
+                        {loading ? "Generating..." : "Generate Interview Data"}
                     </button>
                 </div>
             </div>
