@@ -16,7 +16,7 @@ export const router = createBrowserRouter([
     )
   },
  {
-    path: "/response",
+    path: "/response/:id",
     element: (
       <ProtectedRoutes>
       <Response/>

@@ -1,9 +1,43 @@
-import React, { useState } from "react";
+import React, { useContext, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom"
+import { toast } from "react-toastify";
+import { InterviewContext } from "../Interview.context";
+import Loader from "../../auth/components/Loader";
 const Home = () => {
-    const [resumeName, setResumeName] = useState("")
-      const navigate =useNavigate()
+    const { loading, setLoading, GenerateReport } = useContext(InterviewContext)
+    const navigate = useNavigate()
 
+    const [resumeName, setResumeName] = useState("")
+    const [jobDescription, setjobDescription] = useState("")
+    const [selfDescription, setSelfDescription] = useState("")
+    const fileRef = useRef(null)
+
+    const HandleResponseReport = async () => {
+        const resumeFile = fileRef.current.files[0]
+        if (!resumeFile) {
+            toast.error("Please upload your resume")
+            return
+        }
+        if (!jobDescription.trim()) {
+            toast.error("Job description is required")
+            return
+        }
+        if (!selfDescription.trim()) {
+            toast.error("Self description is required")
+            return
+        }
+        try {
+            const response = await GenerateReport({ resumeFile, jobDescription, selfDescription })
+            if (response?.data?._id) {
+                navigate(`/response/${response.data._id}`)
+            }
+        } catch (error) {
+            toast.error("Something Wrong at While genrating Response")
+        }
+    }
+    if (loading) {
+        return <Loader />
+    }
     return (
         <div className="min-h-screen bg-gray-900 p-7 flex flex-col gap-6">
 
@@ -26,10 +60,13 @@ const Home = () => {
                         🔴  Target Job Description
                     </label>
                     <textarea
+                        onChange={(e) => setjobDescription(e.target.value)}
                         id="jobDescription"
                         name="jobDescription"
+                        value={jobDescription}
                         placeholder="Enter Job description here"
                         className="p-3 rounded-md bg-gray-700 text-white focus:outline-none h-130 focus:ring-2 focus:ring-blue-300 h-48 w-full resize-none"
+
                     />
                 </div>
 
@@ -47,15 +84,18 @@ const Home = () => {
                         </label>
                         <input
                             type="file"
+                            accept="application/pdf"
+                            ref={fileRef}
                             id="resume"
                             name="resume"
                             className="hidden"
-                            onChange={(e) => setResumeName(e.target.files[0]?.name || "")}
+                            onChange={(e) => {
+                                const file = e.target.files[0]
+                                if (file) setResumeName(file.name)
+                            }}
                         />
                         {resumeName && (
-                            <span className="text-sm text-green-800 w-15 bg-green-100 px-3 py-1 rounded-md break-all inline-block">
-                                Done
-                            </span>
+                            <span className="text-green-400 text-sm">{resumeName}</span>
                         )}
                     </div>
 
@@ -64,16 +104,18 @@ const Home = () => {
                             🔴 Self Description
                         </label>
                         <textarea
+                            onChange={(e) => setSelfDescription(e.target.value)}
+                            value={selfDescription}
                             id="selfDescription"
                             name="selfDescription"
                             placeholder="Enter Self description here"
-                            className="p-3 h-70 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-300 h-48 w-full resize-none"
+                            className="p-3 rounded-md bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-300 h-48 w-full resize-none"
                         />
                     </div>
 
                     <button
-                    onClick={() => navigate('/response')}
-                     className="mt-4 p-3 rounded-xl font-semibold text-black text-lg bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-red-600 transition">
+                        onClick={HandleResponseReport}
+                        className="mt-4 p-3 rounded-xl font-semibold text-black text-lg bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-red-600 transition">
                         Generate Interview Data
                     </button>
                 </div>
