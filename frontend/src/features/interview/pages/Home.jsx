@@ -15,16 +15,16 @@ const Home = () => {
 
     const HandleResponseReport = async () => {
         const resumeFile = fileRef.current.files[0]
-        if (!resumeFile) {
-            toast.error("Please upload your resume")
-            return
-        }
         if (!jobDescription.trim()) {
             toast.error("Job description is required")
             return
         }
         if (!selfDescription.trim()) {
             toast.error("Self description is required")
+            return
+        }
+        if (!resumeFile) {
+            toast.error("Please upload your resume")
             return
         }
         try {
@@ -39,21 +39,21 @@ const Home = () => {
         }
     }
     return (
-        <div className="min-h-screen bg-gray-900 p-7 flex flex-col gap-6">
+        <div className="min-h-screen bg-gray-900 pl-5 pr-5 pt-1 flex flex-col gap-6">
 
-            <div className="text-center mb-2 mt-3">
-                <h1 className="text-4xl sm:text-5xl font-semibold text-white">
+            <div className="text-center ">
+                <h1 className="text-4xl sm:text-5xl font-semibold text-white mt-1">
                     Create Your Custom{" "}
                     <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-300 to-purple-700">
                         Interview Plan
                     </span>
                 </h1>
-                <p className="mt-2 text-gray-300">
+                <p className=" text-gray-300">
                     Build a plan tailored to your career goals and strengths.
                 </p>
             </div>
 
-            <div className="border-2 border-gray-500 rounded-xl bg-gray-800 p-7 flex flex-col md:flex-row gap-10">
+            <div className="border-2 border-gray-500 rounded-xl bg-gray-800 p-5 flex flex-col md:flex-row gap-10">
 
                 <div className="flex flex-col flex-1 gap-6 ">
                     <label htmlFor="jobDescription" className="text-white mb-2 font-semibold text-xl">
