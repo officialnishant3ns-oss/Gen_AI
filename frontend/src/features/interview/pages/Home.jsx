@@ -1,12 +1,15 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
 import { toast } from "react-toastify";
 import { InterviewContext } from "../Interview.context";
 import Loader from "../../auth/components/Loader";
 import useInterview from "../hooks/useInterview";
+import Card from "../components/Card";
 const Home = () => {
-    const { loading, setLoading, GenerateReport } = useInterview()
+
+    const { loading, setLoading, GenerateReport, getAllReports, reports, } = useInterview()
     const navigate = useNavigate()
+    console.log("ougyucu",reports)
 
     const [resumeName, setResumeName] = useState("")
     const [jobDescription, setjobDescription] = useState("")
@@ -38,6 +41,10 @@ const Home = () => {
             toast.error(error.message)
         }
     }
+    useEffect(() => {
+        getAllReports()
+    }, []
+    )
     return (
         <div className="min-h-screen bg-gray-900 pl-5 pr-5 pt-1 flex flex-col gap-6">
 
@@ -53,7 +60,7 @@ const Home = () => {
                 </p>
             </div>
 
-            <div className="border-2 border-gray-500 rounded-xl bg-gray-800 p-5 flex flex-col md:flex-row gap-10">
+            <div className="border-2 border-gray-500 rounded-xl bg-gray-800 pt-5 pl-9 pr-9 pb-1 flex flex-col md:flex-row gap-10">
 
                 <div className="flex flex-col flex-1 gap-6 ">
                     <label htmlFor="jobDescription" className="text-white mb-2 font-semibold text-xl">
@@ -120,7 +127,14 @@ const Home = () => {
                     </button>
                 </div>
             </div>
+
+            <div className="text-white border-2 border-gray-500 rounded-xl">
+                {reports && reports.map((h, i) => (
+                    <Card key={i} data={h} />
+                ))}
+            </div>
         </div>
+
     );
 };
 

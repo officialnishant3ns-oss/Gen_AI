@@ -209,4 +209,11 @@ Return ONLY valid JSON.
 
     return validated.data
 }
+
+async function generateResumePdf({ resume, selfDescription, jobDescription }) {
+    
+}
+
+
+
 export default generateInterviewReport

@@ -1,8 +1,7 @@
-import { useContext } from "react"
+import { useContext,useEffect } from "react"
 import { getInterviewReportById, getAllInterviewReport, getinterviewReport } from "../services/interview.api"
 import { InterviewContext } from "../Interview.context"
 import { toast } from "react-toastify/unstyled"
-
 const useInterview = () => {
   const { loading, setLoading, reports, report, setReport,setReports } = useContext(InterviewContext)
 
@@ -11,7 +10,6 @@ const useInterview = () => {
       setLoading(true)
       const response = await getinterviewReport({ resumeFile, selfDescription, jobDescription })
       setReport(response.data)
-
       // console.log(response.data)
         return response.data 
     } catch (error) {
@@ -20,11 +18,12 @@ const useInterview = () => {
       setLoading(false)
     }
   }
-  const getReportById = async ({ interviewId }) => {
+  const getReportById = async (interviewId) => {
     try {
       setLoading(true)
-      const response = await getInterviewReportById({ interviewId })
-      setReport(response.data)
+      const response = await getInterviewReportById(interviewId)
+      setReport(response.Interviewreportdata)
+      return response.Interviewreportdata
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to fetch report")
     } finally {
@@ -35,13 +34,17 @@ const useInterview = () => {
     try {
       setLoading(true)
       const response = await getAllInterviewReport()
-      setReports(response.data)
+      setReports(response.Interviewreportdata)
+      // console.log(response.Interviewreportdata)
+      return response.Interviewreportdata
     } catch (error) {
       toast.error(error?.response?.data?.message || "Failed to fetch reports")
     } finally {
       setLoading(false)
     }
   }
+
+
   return { loading, report, reports, getAllReports, getReportById, GenerateReport }
 }
 

@@ -1,13 +1,23 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import QuestionCard from '../components/QuestionCard'
-import { InterviewContext } from '../Interview.context'
 import useInterview from '../hooks/useInterview'
+import { useParams } from 'react-router'
+import Loader from '../../auth/components/Loader'
 
 const Response = () => {
-
-    const { report } = useInterview()
-    //  console.log(report)
+    const { report, getReportById, loading } = useInterview()
     const [tab, setTab] = useState("technical")
+
+    const { id } = useParams()
+    useEffect(() => {
+        if (!id) return
+        getReportById(id)
+    }, [id]
+    )
+    if (loading) {
+        return <Loader />
+    }
+
     return (
         <div className='grid grid-cols-[290px_1fr_319px] h-screen text-white gap-1 p-2 bg-gradient-to-r from-gray-800 to-gray-900'>
             <div className="bg-gray-900 rounded-xl shadow p-4">
@@ -96,16 +106,16 @@ const Response = () => {
                     {tab === 'skillGap' && <h1 className='mb-3 indent-2 text-purple-400 text-2xl font-semibold'>Preparation Plan For Interview</h1>}
                 </div>
                 {tab === "technical" &&
-                    report.technicalQuestion.map((q, i) => (
+                    report?.technicalQuestion?.map((q, i) => (
                         <QuestionCard key={i} q={q} />
                     ))}
                 {tab === "behavioural" &&
-                    report.behaviouralQuestion.map((q, i) => (
+                    report?.behaviouralQuestion?.map((q, i) => (
                         <QuestionCard key={i} q={q} />
                     ))}
 
                 {tab === 'skillGap' &&
-                    report.preparationPlan.map((p) => (
+                    report?.preparationPlan?.map((p) => (
                         <div key={p.day} className="bg-gray-800 p-5 rounded-xl shadow mb-4 ">
                             <div className='flex align-center gap-5'>
                                 <h3 className="font-semibold text-xl  text-red-400">Day {p.day}</h3>
@@ -135,7 +145,7 @@ const Response = () => {
                         Match Score
                     </h2>
                     <p className="text-3xl font-bold text-purple-400">
-                        {report.matchScore}%
+                        {report?.matchScore}%
                     </p>
                 </div>
                 <div className="space-y-3">
@@ -143,7 +153,7 @@ const Response = () => {
                         Skill Gaps
                     </h3>
 
-                    {report.skillGaps.map((s, index) => (
+                    {report?.skillGaps?.map((s, index) => (
                         <div
                             key={index}
                             className="bg-gray-800 hover:bg-gray-750 transition p-4 rounded-lg flex justify-between items-center mb-2"
