@@ -131,13 +131,13 @@ const interviewReportSchema = z.object({
             tasks: z.array(z.string())
         })
     ),
-    title:z.string().describe("The title of of the Job for which the interview report is generated")
+    title: z.string().describe("The title of of the Job for which the interview report is generated")
 
 }).strict()
 
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
 
-const prompt = `
+    const prompt = `
 You are a senior technical interviewer.
 
 Generate an interview preparation report.
@@ -202,7 +202,7 @@ Return ONLY valid JSON.
     const validated = interviewReportSchema.safeParse(json)
 
     if (!validated.success) {
-            console.error(validated.error)
+        console.error(validated.error)
         throw new Error("Invalid AI response format")
     }
 
@@ -210,9 +210,66 @@ Return ONLY valid JSON.
 }
 
 async function generateResumePdf({ resume, selfDescription, jobDescription }) {
-    prompt
+
+    const htmlResponse = z.string().describe("A complete valid HTML document for a professional ATS-friendly resume. Must start with <!DOCTYPE html> and contain no explanations or extra text."
+    )
+   const prompt = `You are an expert resume writer and HTML designer.
+Your task is to generate a professional, ATS-friendly resume in **pure HTML format** based on the inputs provided.
+Resume Data: ${resume}
+Self Description: ${selfDescription}
+Job Description: ${jobDescription}
+
+### Inputs:
+1. Resume Data: {{resume}}
+2. Candidate Self Description: {{selfDescription}}
+3. Job Description: {{jobDescription}}
+
+### Instructions:
+- Generate a **complete HTML document** (include <!DOCTYPE html>, <html>, <head>, <body>)
+- Use **inline CSS only** (no external styles, no Tailwind, no scripts)
+- The design should be **clean, modern, and professional**
+- Format the resume specifically tailored to the **job description**
+- Highlight relevant skills, experience, and keywords from the job description
+- Keep it **ATS-friendly** (simple layout, no complex tables)
+
+### Structure to follow:
+- Header:
+  - Full Name
+  - Email | Phone | Location | LinkedIn (if available)
+  -github | porfolio
+- Summary:
+  - 2–3 lines tailored to the job
+- Skills:
+  - Bullet points or inline list
+- Experience:
+  - Job Title, Company, Duration
+  - Bullet points with achievements
+- Projects (if relevant)
+- Education
+
+### Styling Guidelines:
+- Use a professional font (Arial, Helvetica, sans-serif)
+- Proper spacing and margins
+- Section headings with subtle borders or emphasis
+- Keep it visually clean for PDF conversion
+
+### IMPORTANT:
+- Output ONLY valid HTML
+- Do NOT include explanations, markdown, or code blocks
+- Ensure the HTML is directly usable for PDF generation (Puppeteer)
+`
+    const response = await ai.models.generateContent({
+        // model: "gemini-2.0-flash", 
+        model: "gemini-3-flash-preview",
+        contents: prompt,
+    });
+
+    let html = response.text
+    console.log(html)
+    return html
+
 }
 
 
 
-export  {generateInterviewReport , generateResumePdf}
+export { generateInterviewReport, generateResumePdf }

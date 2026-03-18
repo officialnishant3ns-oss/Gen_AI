@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config({ path: "./.env" })
 console.log("Project Started")
 import connectDB from "./src/db/db.js"
+import { generateResumePdf } from "./src/services/ai.services.js";
 
 connectDB()
 .then(() => {
@@ -17,6 +18,55 @@ connectDB()
     .catch((error) => {
         console.log("Mongo_DB connection failed", error);
     })
+
+//checking ai -response 
+generateResumePdf({
+  resume: {
+    name: "Nishant Singh",
+    email: "nishant.singh@example.com",
+    phone: "+91-9876543210",
+    location: "Delhi, India",
+    linkedin: "https://linkedin.com/in/nishantsingh",
+    github: "https://github.com/nishantsingh",
+    portfolio: "https://nishantsingh.dev",
+    skills: [
+      "JavaScript",
+      "Node.js",
+      "Express.js",
+      "React.js",
+      "MongoDB",
+      "Python"
+    ],
+    experience: [
+      {
+        role: "Software Developer Intern",
+        company: "TechNova Solutions",
+        duration: "Jan 2025 - Present",
+        achievements: [
+          "Developed REST APIs using Node.js",
+          "Improved API performance by 30%",
+          "Worked on AI-based applications"
+        ]
+      }
+    ],
+    projects: [
+      {
+        name: "AI Resume Builder",
+        description: "Built resume generator using Gemini API and Puppeteer"
+      }
+    ],
+    education: {
+      degree: "B.Tech in Computer Science",
+      college: "ABC University",
+      duration: "2021 - 2025"
+    }
+  },
+
+  selfDescription: "I am a passionate full-stack developer skilled in MERN stack and AI integrations. I enjoy building scalable applications and solving real-world problems.",
+
+  jobDescription: "Looking for a Full Stack Developer skilled in Node.js, React, and MongoDB. Experience with APIs and AI tools is a plus."
+})
+
 
 app.get('/api/v1', (req, res) => {
     res.send(`
