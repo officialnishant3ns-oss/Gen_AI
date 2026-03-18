@@ -15,7 +15,7 @@ app.use(express.json({
     limit: "16kb"
 }))
 app.use(cookieParser()) 
-
+app.use(express.urlencoded({ extended: true }))
 
 //auth routes portion there
 import authrouter from '../src/routes/auth.routes.js'

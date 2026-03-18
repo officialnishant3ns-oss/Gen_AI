@@ -1,6 +1,7 @@
-import generateInterviewReport from "../services/ai.services.js"
+import { generateInterviewReport } from "../services/ai.services.js"
 import InterviewReport from "../models/interviewReport.model.js"
 import { PDFParse } from 'pdf-parse'
+import puppeteer from "puppeteer"
 
 const generateInterviewReport_api = async (req, res) => {
     try {
@@ -94,7 +95,7 @@ const getAllInterviewReport = async (req, res) => {
         return res.status(200).json({
             status: true,
             message: "Successfully found reports",
-            count:Interviewreportdata.length,
+            count: Interviewreportdata.length,
             Interviewreportdata,
         })
 
@@ -106,5 +107,51 @@ const getAllInterviewReport = async (req, res) => {
         })
     }
 }
+const generateResumePdf_Api = async (req, res) => {
+   let browser 
+    try {
+        //Todo html form response by ai
+        const { html } = req.body
+        if (!html || typeof html !== "string") {
+            return res.status(400).json({
+                status: false,
+                message: "Html content is Required there"
+            })
+        } 
+        // to launch puppeteer
+        const browser = await puppeteer.launch({
+            headless: "new",
+            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        }) 
+        const page = await browser.newPage()  //for a new blank page
 
-export { generateInterviewReport_api, getInterviewReportById, getAllInterviewReport }
+        await page.setContent(html, {                 //to set html content
+            waitUntil: ["load", "networkidle0"],
+        })
+        const pdfBuffer = await page.pdf({          //gnerate the page >>yhi hai
+            format: "A4",
+            printBackground: true,
+            margin: {
+                top: "20px",
+                bottom: "20px",
+                left: "20px",
+                right: "20px",
+            },
+        })
+        res.set({
+            "Content-Type": "application/pdf",
+            "Content-Disposition": "attachment; filename=document.pdf",
+            "Content-Length": pdfBuffer.length,
+        })
+        return res.status(200).send(pdfBuffer)
+    } catch (error) {
+        console.error("PDF generation error:", error)
+        return res.status(500).json({
+            success: false,
+            message: "Failed to generate PDF",
+        })
+    } finally {
+        if (browser) await browser.close()
+    }
+}
+export { generateInterviewReport_api, getInterviewReportById, getAllInterviewReport ,generateResumePdf_Api}

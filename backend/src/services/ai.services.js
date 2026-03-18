@@ -98,7 +98,6 @@ const ai = new GoogleGenAI({
     apiKey: process.env.GEMINI_API_KEY
 })
 
-
 const interviewReportSchema = z.object({
     matchScore: z.number().min(0).max(100),
 
@@ -211,9 +210,9 @@ Return ONLY valid JSON.
 }
 
 async function generateResumePdf({ resume, selfDescription, jobDescription }) {
-    
+    prompt
 }
 
 
 
-export default generateInterviewReport
+export  {generateInterviewReport , generateResumePdf}

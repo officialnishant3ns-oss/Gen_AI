@@ -164,7 +164,7 @@ const Response = () => {
 
                             <span
                                 className={`px-3 capitalize py-1 rounded-full text-xs font-semibold 
-                           ${s.severity === "easy" ? "bg-green-500/20 text-green-400" : ""}
+                           ${s.severity === "low" ? "bg-green-500/20 text-green-400" : ""}
                            ${s.severity === "medium" ? "bg-yellow-500/20 text-yellow-400" : ""}
                            ${s.severity === "high" ? "bg-red-500/20 text-red-400" : ""}
                           `}

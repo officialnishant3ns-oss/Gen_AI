@@ -1,16 +1,12 @@
 import React, { useContext, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom"
-import { toast } from "react-toastify";
-import { InterviewContext } from "../Interview.context";
-import Loader from "../../auth/components/Loader";
-import useInterview from "../hooks/useInterview";
-import Card from "../components/Card";
+import { toast } from "react-toastify"
+import useInterview from "../hooks/useInterview"
 const Home = () => {
-
-    const { loading, setLoading, GenerateReport, getAllReports, reports, } = useInterview()
+    const { GenerateReport, getAllReports, reports, } = useInterview()
     const navigate = useNavigate()
-    console.log("ougyucu",reports)
-
+    console.log("ougyucu", reports)
+    const [loader, setLoader] = useState("")
     const [resumeName, setResumeName] = useState("")
     const [jobDescription, setjobDescription] = useState("")
     const [selfDescription, setSelfDescription] = useState("")
@@ -30,15 +26,17 @@ const Home = () => {
             toast.error("Please upload your resume")
             return
         }
+        setLoader(true)
         try {
             const response = await GenerateReport({ resumeFile, jobDescription, selfDescription })
-            // console.log("Generated Report:", response)
             if (response?._id) {
                 navigate(`/response/${response._id}`)
             }
         } catch (error) {
             console.log(error.message)
             toast.error(error.message)
+        } finally {
+            setLoader(false)
         }
     }
     useEffect(() => {
@@ -46,7 +44,7 @@ const Home = () => {
     }, []
     )
     return (
-        <div className="min-h-screen bg-gray-900 pl-5 pr-5 pt-1 flex flex-col gap-6">
+        <div className="min-h-screen bg-gray-900 pl-5 pr-5 pt-5 flex flex-col gap-6">
 
             <div className="text-center ">
                 <h1 className="text-4xl sm:text-5xl font-semibold text-white mt-1">
@@ -123,14 +121,38 @@ const Home = () => {
                     <button
                         onClick={HandleResponseReport}
                         className="mt-4 p-3 rounded-xl font-semibold text-black text-lg bg-gradient-to-r from-blue-400 to-purple-500 hover:from-blue-500 hover:to-red-600 transition">
-                        {loading ? "Generating..." : "Generate Interview Data"}
+                        {loader ? "Generating..." : "Generate Interview Data"}
                     </button>
                 </div>
             </div>
 
             <div className="text-white border-2 border-gray-500 rounded-xl">
-                {reports && reports.map((h, i) => (
-                    <Card key={i} data={h} />
+                <h1 className="text-center font-semibold text-4xl text-purple-400">
+                    My Recent Plans
+                </h1>
+
+                {reports && reports.map((response, i) => (
+                    <div
+                        key={response?._id || i}
+                        onClick={() => {
+                            console.log("CLICKED:", response._id);
+                            navigate(`/response/${response._id}`);
+                        }}
+                        className="p-4 border-2 cursor-pointer border-gray-400 rounded-xl  hover:bg-gray-800 mb-2 ml-4 mr-9 mt-5 transition"
+                    >
+                        <h2 className="text-lg font-semibold text-yellow-200">
+                            {response?.title}
+                        </h2>
+
+                        <div className="h-px bg-gray-700 mb-3"></div>
+
+                        <p className="text-sm text-gray-200">
+                            Generated At :{" "}
+                            {response?.createdAt ? new Date(response.createdAt).toLocaleString() : "N/A"}
+                        </p>
+                        <div className="h-px bg-gray-700 mb-3"></div>
+                        <p className="text-purple-500">Match Score : <span className="text-green-400"> {response.matchScore}%</span> </p>
+                    </div>
                 ))}
             </div>
         </div>
