@@ -109,6 +109,7 @@ const getAllInterviewReport = async (req, res) => {
 }
 const generateResumePdf_Api = async (req, res) => {
     let browser
+
     try {
         const { selfDescription, jobDescription } = req.body
         if (!selfDescription || !jobDescription) {
@@ -133,11 +134,15 @@ const generateResumePdf_Api = async (req, res) => {
             })
         }
         const aihtml = await generateResumePdf({
-            resumeContent :resumeText.text,
+            resumeContent: resumeText,
             selfDescription,
             jobDescription
         })
-        const { html } = aihtml
+
+        // console.log("AI RESPONSE:", aihtml)
+
+        const html = aihtml
+
         if (!html || typeof html !== "string") {
             return res.status(400).json({
                 status: false,
@@ -145,7 +150,7 @@ const generateResumePdf_Api = async (req, res) => {
             })
         }
         // to launch puppeteer
-        const browser = await puppeteer.launch({
+        browser = await puppeteer.launch({
             headless: "new",
             args: ["--no-sandbox", "--disable-setuid-sandbox"],
         })

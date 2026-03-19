@@ -8,6 +8,6 @@ const interviewRoutes = Router()
 interviewRoutes.post('/interview-ai',verifyJWT,upload.single("resume"),generateInterviewReport_api)
 interviewRoutes.get('/getinterview-report/:InterviewId',verifyJWT,getInterviewReportById)
 interviewRoutes.get('/all-interview-report',verifyJWT,getAllInterviewReport)
-interviewRoutes.post('/generate-pdf',verifyJWT,generateResumePdf_Api)
+interviewRoutes.post('/generate-pdf',upload.single("resume"),verifyJWT,generateResumePdf_Api)
 
 export default interviewRoutes
