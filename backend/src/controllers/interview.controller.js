@@ -140,9 +140,7 @@ const generateResumePdf_Api = async (req, res) => {
         })
 
         // console.log("AI RESPONSE:", aihtml)
-
         const html = aihtml
-
         if (!html || typeof html !== "string") {
             return res.status(400).json({
                 status: false,
@@ -183,6 +181,53 @@ const generateResumePdf_Api = async (req, res) => {
         })
     } finally {
         if (browser) await browser.close()
+    }
+}
+const generateResumebyId = async (req, res) => {
+    try {
+        const { InterviewId } = req.params
+        const interviewReportData = await InterviewReport.findById(InterviewId)
+        if (!interviewReportData) {
+            return res.status(404).json({ status: false, message: "Report not Found" })
+        }
+        const { resume, selfDescription, jobDescription } = interviewReportData
+
+        const aihtml = await generateResumePdf({ resume, selfDescription, jobDescription })
+        
+         const html = aihtml
+        if (!html || typeof html !== "string") {
+            return res.status(400).json({
+                status: false,
+                message: "Html content is Required there"
+            })
+        }
+        browser = await puppeteer.launch({
+            headless: "new",
+            args: ["--no-sandbox", "--disable-setuid-sandbox"],
+        })
+        const page = await browser.newPage()  
+        await page.setContent(html, {                 
+            waitUntil: ["load", "networkidle0"],
+        })
+        const pdfBuffer = await page.pdf({         
+            format: "A4",
+            printBackground: true,
+            margin: {
+                top: "20px",
+                bottom: "20px",
+                left: "20px",
+                right: "20px",
+            },
+        })
+        res.set({
+            "Content-Type": "application/pdf",
+            "Content-Disposition": "attachment; filename=document.pdf",
+            "Content-Length": pdfBuffer.length,
+        })
+        return res.status(200).send(pdfBuffer)
+
+    } catch (error) {
+
     }
 }
 export { generateInterviewReport_api, getInterviewReportById, getAllInterviewReport, generateResumePdf_Api }
