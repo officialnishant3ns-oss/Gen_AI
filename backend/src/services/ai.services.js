@@ -95,49 +95,49 @@ import { z } from "zod"
 import { zodToJsonSchema } from "zod-to-json-schema"
 
 const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY
+  apiKey: process.env.GEMINI_API_KEY
 })
 
 const interviewReportSchema = z.object({
-    matchScore: z.number().min(0).max(100),
+  matchScore: z.number().min(0).max(100),
 
-    technicalQuestion: z.array(
-        z.object({
-            question: z.string(),
-            intention: z.string(),
-            answer: z.string()
-        })
-    ),
+  technicalQuestion: z.array(
+    z.object({
+      question: z.string(),
+      intention: z.string(),
+      answer: z.string()
+    })
+  ),
 
-    behaviouralQuestion: z.array(
-        z.object({
-            question: z.string(),
-            intention: z.string(),
-            answer: z.string()
-        })
-    ),
+  behaviouralQuestion: z.array(
+    z.object({
+      question: z.string(),
+      intention: z.string(),
+      answer: z.string()
+    })
+  ),
 
-    skillGaps: z.array(
-        z.object({
-            skill: z.string(),
-            severity: z.enum(["low", "medium", "high"])
-        })
-    ),
+  skillGaps: z.array(
+    z.object({
+      skill: z.string(),
+      severity: z.enum(["low", "medium", "high"])
+    })
+  ),
 
-    preparationPlan: z.array(
-        z.object({
-            day: z.number(),
-            focus: z.string(),
-            tasks: z.array(z.string())
-        })
-    ),
-    title: z.string().describe("The title of of the Job for which the interview report is generated")
+  preparationPlan: z.array(
+    z.object({
+      day: z.number(),
+      focus: z.string(),
+      tasks: z.array(z.string())
+    })
+  ),
+  title: z.string().describe("The title of of the Job for which the interview report is generated")
 
 }).strict()
 
 async function generateInterviewReport({ resume, selfDescription, jobDescription }) {
 
-    const prompt = `
+  const prompt = `
 You are a senior technical interviewer.
 
 Generate an interview preparation report.
@@ -185,35 +185,35 @@ Job Description: ${jobDescription}
 Return ONLY valid JSON.
 `
 
-    const response = await ai.models.generateContent({
-        // model: "gemini-2.5-flash",
-        model: "gemini-3-flash-preview",
-        contents: prompt,
-        generationConfig: {
-            responseMimeType: "application/json",
-            responseSchema: zodToJsonSchema(interviewReportSchema),
-            temperature: 0.2
-        }
-    })
-
-    const json = JSON.parse(response.text)
-    // console.log(json)
-    console.log(JSON.stringify(json, null, 2))
-    const validated = interviewReportSchema.safeParse(json)
-
-    if (!validated.success) {
-        console.error(validated.error)
-        throw new Error("Invalid AI response format")
+  const response = await ai.models.generateContent({
+    // model: "gemini-2.5-flash",
+    model: "gemini-3-flash-preview",
+    contents: prompt,
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: zodToJsonSchema(interviewReportSchema),
+      temperature: 0.2
     }
+  })
 
-    return validated.data
+  const json = JSON.parse(response.text)
+  // console.log(json)
+  console.log(JSON.stringify(json, null, 2))
+  const validated = interviewReportSchema.safeParse(json)
+
+  if (!validated.success) {
+    console.error(validated.error)
+    throw new Error("Invalid AI response format")
+  }
+
+  return validated.data
 }
 
 async function generateResumePdf({ resume, selfDescription, jobDescription }) {
 
-    const htmlResponse = z.string().describe("A complete valid HTML document for a professional ATS-friendly resume. Must start with <!DOCTYPE html> and contain no explanations or extra text."
-    )
-   const prompt = `You are an expert resume writer and HTML designer.
+  const htmlResponse = z.string().describe("A complete valid HTML document for a professional ATS-friendly resume. Must start with <!DOCTYPE html> and contain no explanations or extra text."
+  )
+  const prompt = `You are an expert resume writer and HTML designer.
 Your task is to generate a professional, ATS-friendly resume in **pure HTML format** based on the inputs provided.
 Resume Data: ${resume}
 Self Description: ${selfDescription}
@@ -258,15 +258,15 @@ Job Description: ${jobDescription}
 - Do NOT include explanations, markdown, or code blocks
 - Ensure the HTML is directly usable for PDF generation (Puppeteer)
 `
-    const response = await ai.models.generateContent({
-        // model: "gemini-2.0-flash", 
-        model: "gemini-3-flash-preview",
-        contents: prompt,
-    });
+  const response = await ai.models.generateContent({
+    // model: "gemini-2.0-flash", 
+    model: "gemini-3-flash-preview",
+    contents: prompt,
+  });
 
-    let html = response.text
-    // console.log(html)
-    return html
+  let html = response.text
+  // console.log(html)
+  return html
 
 }
 

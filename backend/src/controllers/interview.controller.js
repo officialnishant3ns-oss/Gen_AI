@@ -184,32 +184,46 @@ const generateResumePdf_Api = async (req, res) => {
     }
 }
 const generateResumebyId = async (req, res) => {
+    let browser
+
     try {
         const { InterviewId } = req.params
-        const interviewReportData = await InterviewReport.findById(InterviewId)
-        if (!interviewReportData) {
-            return res.status(404).json({ status: false, message: "Report not Found" })
-        }
-        const { resume, selfDescription, jobDescription } = interviewReportData
 
-        const aihtml = await generateResumePdf({ resume, selfDescription, jobDescription })
-        
-         const html = aihtml
-        if (!html || typeof html !== "string") {
-            return res.status(400).json({
+        const interviewReportData = await InterviewReport.findById(InterviewId)
+
+        if (!interviewReportData) {
+            return res.status(404).json({
                 status: false,
-                message: "Html content is Required there"
+                message: "Report not Found"
             })
         }
+        const { resume, selfDescription, jobDescription } = interviewReportData             //learning
+
+        const html = await generateResumePdf({
+            resume,
+            selfDescription,
+            jobDescription
+        })
+        // console.log(html)
+        if (!html || typeof html !== "string" || html.trim().length < 50) {
+            return res.status(400).json({
+                status: false,
+                message: "Invalid HTML content generated"
+            })
+        }
+
         browser = await puppeteer.launch({
             headless: "new",
             args: ["--no-sandbox", "--disable-setuid-sandbox"],
         })
-        const page = await browser.newPage()  
-        await page.setContent(html, {                 
-            waitUntil: ["load", "networkidle0"],
+
+        const page = await browser.newPage()
+
+        await page.setContent(html, {
+            waitUntil: ["load", "domcontentloaded", "networkidle0"],
         })
-        const pdfBuffer = await page.pdf({         
+
+        const pdfBuffer = await page.pdf({
             format: "A4",
             printBackground: true,
             margin: {
@@ -219,15 +233,26 @@ const generateResumebyId = async (req, res) => {
                 right: "20px",
             },
         })
+
+        await browser.close()
+
         res.set({
             "Content-Type": "application/pdf",
-            "Content-Disposition": "attachment; filename=document.pdf",
+            "Content-Disposition": "attachment; filename=resume.pdf",
             "Content-Length": pdfBuffer.length,
         })
+
         return res.status(200).send(pdfBuffer)
 
     } catch (error) {
+        console.error("PDF Generation Error:", error)
 
+        if (browser) await browser.close()
+
+        return res.status(500).json({
+            status: false,
+            message: "Failed to generate resume PDF"
+        })
     }
 }
-export { generateInterviewReport_api, getInterviewReportById, getAllInterviewReport, generateResumePdf_Api }
+export { generateInterviewReport_api, generateResumebyId, getInterviewReportById, getAllInterviewReport, generateResumePdf_Api }
