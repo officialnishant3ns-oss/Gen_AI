@@ -126,7 +126,6 @@ const login = async (req, res) => {
         })
     }
 }
-
 async function Logout(req,res) {
     try {
         const token = req.cookies.token
@@ -148,7 +147,6 @@ async function Logout(req,res) {
         })  
     }
 }
-
 async function getUser(req,res) {
     try {
         // const id = req.user.id

@@ -262,7 +262,7 @@ Job Description: ${jobDescription}
     // model: "gemini-2.0-flash", 
     model: "gemini-3-flash-preview",
     contents: prompt,
-  });
+  })
 
   let html = response.text
   // console.log(html)
