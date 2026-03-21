@@ -26,4 +26,7 @@ app.use('/api/v1/user',authrouter)
 import interviewRoutes from './routes/interview.routes.js'
 app.use('/api/v1',interviewRoutes)
 
+import chatRoutes from '../src/routes/chatbot.routes.js'
+app.use('/api/v1',chatRoutes)
+
 export default app
